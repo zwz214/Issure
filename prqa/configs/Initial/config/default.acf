@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acf xmlversion="2.0.0">
+  <components>
+    <component version="9.7.0" target="C" name="qac"/>
+    <component version="4.5.0" target="C++" name="qacpp"/>
+  </components>
+  <component_settings>
+    <input_to version="4.5.0" target="C++" component="qacpp">
+      <option argument="include" name="-i "/>
+    </input_to>
+  </component_settings>
+</acf>

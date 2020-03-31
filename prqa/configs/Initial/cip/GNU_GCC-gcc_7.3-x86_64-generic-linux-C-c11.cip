@@ -1,0 +1,26 @@
+-q "/home/zwz/下载/spdlog-1.x/prqa/configs/Initial/config/DATA/GNU_GCC-gcc/Stub/prlforceinclude"
+-i "/home/zwz/下载/spdlog-1.x/prqa/configs/Initial/config/DATA/GNU_GCC-gcc/Stub/gcc"
+-q "/home/zwz/下载/spdlog-1.x/prqa/configs/Initial/config/DATA/GNU_GCC-gcc/Stub/gcc"
+-fi "/home/zwz/下载/spdlog-1.x/prqa/configs/Initial/config/DATA/GNU_GCC-gcc/Stub/prlforceinclude/045_prlgcc.h"
+-fi "/home/zwz/下载/spdlog-1.x/prqa/configs/Initial/config/DATA/GNU_GCC-gcc/Stub/prlforceinclude/150_builtins_all.h"
+-i "/usr/lib/gcc/x86_64-linux-gnu/9/include"
+-q  "/usr/lib/gcc/x86_64-linux-gnu/9/include"
+-i "/usr/local/include"
+-q  "/usr/local/include"
+-i "/usr/lib/gcc/x86_64-linux-gnu/9/include-fixed"
+-q  "/usr/lib/gcc/x86_64-linux-gnu/9/include-fixed"
+-i "/usr/include/x86_64-linux-gnu"
+-q  "/usr/include/x86_64-linux-gnu"
+-i "/usr/include"
+-q  "/usr/include"
+
+* The detected __GNUC_PATCHLEVEL__.
+-d "__GNUC_PATCHLEVEL__=1"
+
+* The detected __VERSION__ string.
+-d "__VERSION__=_PRL_STRINGIFY(9.2.1 20191008)"
+
+* The reported compiler version.
+-d "__PRL_GNUC_PATCHLEVEL__=1"
+-d "__PRL_GNUC__=9"
+-d "__PRL_GNUC_MINOR__=2"

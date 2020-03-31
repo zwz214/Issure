@@ -1,0 +1,149 @@
+#ifndef __QAC_INCLUDE_future__
+#define __QAC_INCLUDE_future__
+
+#include <qac_config.h>
+#include <chrono>
+#include <system_error>
+#include <type_traits>
+
+__QAC_BEGIN_NAMESPACE
+
+  enum class future_errc {
+    broken_promise,
+    future_already_retrieved,
+    promise_already_satisfied,
+    no_state
+  };
+
+  enum class launch {
+    async,
+    deferred
+  };
+
+  enum class future_status {
+    ready,
+    timeout,
+    deferred
+  };
+
+  template <> struct is_error_code_enum<future_errc> : public true_type { };
+  error_code make_error_code(future_errc e) noexcept;
+  error_condition make_error_condition(future_errc e) noexcept;
+
+  const error_category& future_category() noexcept;
+
+  class future_error;
+
+  template <class R> class promise;
+  template <class R> class promise<R&>;
+  template <> class promise<void>;
+
+  template <class R>
+    void swap(promise<R>& x, promise<R>& y) noexcept;
+
+  template <class R, class Alloc>
+    struct uses_allocator<promise<R>, Alloc>;
+
+  // Forward declarations
+  template <class R> class future;
+  template <class R> class future<R&>;
+  template <> class future<void>;
+
+  template <class R> class shared_future;
+  template <class R> class shared_future<R&>;
+  template <> class shared_future<void>;
+
+  template <class> class packaged_task; // not defined
+  template <class R, class... ArgTypes>
+    class packaged_task<R(ArgTypes...)>;
+
+  template <class R, class... ArgTypes>
+    void swap(packaged_task<R(ArgTypes...)>&, packaged_task<R(ArgTypes...)>&) noexcept;
+
+  template <class R, class Alloc>
+    struct uses_allocator<packaged_task<R>, Alloc>;
+
+  template <class F, class... Args>
+    future<invoke_result_t<decay_t<F>, decay_t<Args>...>>
+    async(F&& f, Args&&... args);
+
+  template <class F, class... Args>
+    future<invoke_result_t<decay_t<F>, decay_t<Args>...>>
+    async(launch policy, F&& f, Args&&... args);
+
+
+  // Primary template for future
+  template <class R> class future {
+  public:
+    future() noexcept;
+    future(future&&) noexcept;
+    future(const future& rhs) = delete;
+    ~future();
+    future& operator=(const future& rhs) = delete;
+    future& operator=(future&&) noexcept;
+    shared_future<R> share() noexcept;
+
+    // retrieving the value
+    R get();
+
+    // functions to check state
+    bool valid() const noexcept;
+
+    void wait() const;
+    template <class Rep, class Period>
+      future_status wait_for(const chrono::duration<Rep, Period>& rel_time) const;
+    template <class Clock, class Duration>
+      future_status wait_until(const chrono::time_point<Clock, Duration>& abs_time) const;
+  };
+
+  // Partial specialization for future<R&>
+  template <class R> class future<R&> {
+  public:
+    future() noexcept;
+    future(future&&) noexcept;
+    future(const future& rhs) = delete;
+    ~future();
+    future& operator=(const future& rhs) = delete;
+    future& operator=(future&&) noexcept;
+    shared_future<R&> share() noexcept;
+
+    // retrieving the value
+    R& get();
+
+    // functions to check state
+    bool valid() const noexcept;
+
+    void wait() const;
+    template <class Rep, class Period>
+      future_status wait_for(const chrono::duration<Rep, Period>& rel_time) const;
+    template <class Clock, class Duration>
+      future_status wait_until(const chrono::time_point<Clock, Duration>& abs_time) const;
+  };
+
+  // Partial specialization for future<void>
+  template <> class future<void> {
+  public:
+    future() noexcept;
+    future(future&&) noexcept;
+    future(const future& rhs) = delete;
+    ~future();
+    future& operator=(const future& rhs) = delete;
+    future& operator=(future&&) noexcept;
+    shared_future<void> share() noexcept;
+
+    // retrieving the value
+    void get();
+
+    // functions to check state
+    bool valid() const noexcept;
+
+    void wait() const;
+    template <class Rep, class Period>
+      future_status wait_for(const chrono::duration<Rep, Period>& rel_time) const;
+    template <class Clock, class Duration>
+      future_status wait_until(const chrono::time_point<Clock, Duration>& abs_time) const;
+  };
+
+__QAC_END_NAMESPACE
+
+#endif
